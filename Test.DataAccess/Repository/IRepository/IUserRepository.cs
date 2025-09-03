@@ -15,5 +15,7 @@ namespace Test.DataAccess.Repository.IRepository
         Task<AppUser> Update(AppUser model);
         Task Delete(AppUser model);
         Task<IList<AppUser>> GetByStateId(int StateId);
+        Task<bool> EmailExist(string email);
+
     }
 }

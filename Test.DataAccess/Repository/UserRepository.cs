@@ -113,5 +113,18 @@ namespace Test.DataAccess.Repository
                 throw ex;
             }
         }
+        public async Task<bool> EmailExist(string email)
+        {
+            try
+            {
+                var repository = _unitofwork.GetRepository<AppUser>();
+                bool exist = await repository.Query().AnyAsync(x=>x.Email.ToLower()==email.ToLower());
+                return exist;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
