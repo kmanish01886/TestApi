@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Test.Models.DTOs
 {
-    public class RegisterDto
+    public class LoginDto 
     {
-        [Required]
-        public string DisplayName { get; set; } = "";
         [Required]   
         [EmailAddress]
         public  string Email { get; set; } = "";

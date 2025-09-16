@@ -34,7 +34,24 @@ namespace Test.API.Controllers
             return Ok(user);
 
         }
+        [HttpPost("login")]
+        public async Task<ActionResult<AppUser>> Login(LoginDto dto)
+        {
 
+            var user = await _userRepository.GetByEmail(dto.Email);
+            if (user==null)
+            {
+                return Unauthorized("This Email " + dto.Email + " is invalid");
+            }
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
+            for(var i=0; i<computeHash.Length; i++)
+                {
+                if (computeHash[i] != user.PasswordHash[i])
+                    return Unauthorized("Invalid password");
+            }
 
+            return Ok(user);
+        }
     }
 }

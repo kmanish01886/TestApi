@@ -126,5 +126,18 @@ namespace Test.DataAccess.Repository
                 throw ex;
             }
         }
+        public async Task<AppUser> GetByEmail(string email)
+        {
+            try
+            {
+                var repository = _unitofwork.GetRepository<AppUser>();
+                var result = await repository.Query().Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
