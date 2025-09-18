@@ -28,6 +28,7 @@ namespace Test.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddCors();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             #endregion
 
             #region Middlewares

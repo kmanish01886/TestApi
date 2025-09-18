@@ -10,8 +10,12 @@ namespace Test.API.Controllers
     public class AccountController : BaseApiController
     {
         public readonly IUserRepository _userRepository;
-        public AccountController(IUserRepository user) {
+        public readonly ITokenService _tokernService;
+
+
+        public AccountController(IUserRepository user, ITokenService tokenService) {
             _userRepository = user;
+            _tokernService = tokenService;
         }
         [HttpPost("register")]
         public async Task<ActionResult<AppUser>> Register(RegisterDto dto)
@@ -35,7 +39,7 @@ namespace Test.API.Controllers
 
         }
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto dto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto dto)
         {
 
             var user = await _userRepository.GetByEmail(dto.Email);
@@ -51,7 +55,14 @@ namespace Test.API.Controllers
                     return Unauthorized("Invalid password");
             }
 
-            return Ok(user);
+            return Ok(new UserDto
+            { 
+                Id=user.Id,
+                DisplayName=user.DisplayName,
+                Email=user.Email,
+                Token=_tokernService.CreateToken(user)
+            
+            });
         }
     }
 }
