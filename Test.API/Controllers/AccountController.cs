@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
+using Test.API.Extensions;
+using Test.DataAccess.Repository;
 using Test.DataAccess.Repository.IRepository;
 using Test.Models.DTOs;
 using Test.Models.Entities;
@@ -55,14 +57,7 @@ namespace Test.API.Controllers
                     return Unauthorized("Invalid password");
             }
 
-            return Ok(new UserDto
-            { 
-                Id=user.Id,
-                DisplayName=user.DisplayName,
-                Email=user.Email,
-                Token=_tokernService.CreateToken(user)
-            
-            });
+            return Ok(user.ToDto(_tokernService));
         }
     }
 }

@@ -1,5 +1,8 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Test.DataAccess.Data;
 using Test.DataAccess.Repository;
 using Test.DataAccess.Repository.IRepository;
@@ -29,6 +32,19 @@ namespace Test.API
             builder.Services.AddSwaggerGen();
             builder.Services.AddCors();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var tokenKey = builder.Configuration["TokenKey"] ?? throw new Exception("Token key not fount");
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                        ValidateIssuer = false,
+                        ValidateAudience = true
+                    };
+                });
+
             #endregion
 
             #region Middlewares
