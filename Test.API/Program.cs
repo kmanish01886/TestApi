@@ -55,6 +55,11 @@ namespace Test.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod()
             .WithOrigins("http://localhost:4200","https://localhost:4200"));
