@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Test.API.Middleware;
 using Test.DataAccess.Data;
 using Test.DataAccess.Repository;
 using Test.DataAccess.Repository.IRepository;
@@ -60,7 +61,7 @@ namespace Test.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<ExceptionMiddlevare>();
             app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod()
             .WithOrigins("http://localhost:4200","https://localhost:4200"));
             app.UseHttpsRedirection();
