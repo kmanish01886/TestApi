@@ -38,6 +38,9 @@ namespace Test.DataAccess.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -48,13 +51,18 @@ namespace Test.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MemberId");
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Test.Models.Entities.Member", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -87,12 +95,7 @@ namespace Test.DataAccess.Migrations
                     b.Property<DateTime>("LastActive")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Members");
                 });
@@ -105,9 +108,8 @@ namespace Test.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("MemberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
@@ -123,13 +125,15 @@ namespace Test.DataAccess.Migrations
                     b.ToTable("Photos");
                 });
 
-            modelBuilder.Entity("Test.Models.Entities.Member", b =>
+            modelBuilder.Entity("Test.Models.Entities.AppUser", b =>
                 {
-                    b.HasOne("Test.Models.Entities.AppUser", "User")
+                    b.HasOne("Test.Models.Entities.Member", "Member")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("Test.Models.Entities.Photo", b =>

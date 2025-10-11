@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace Test.Models.Entities
 {
     public class Member
     {
-        public string Id { get; set; } = null!;
+        public int Id { get; set; } 
         public DateOnly DateOfBirth { get; set; }
         public string? ImageUrl { get; set; }
         public required string DisplayName { get; set; }
@@ -18,6 +19,6 @@ namespace Test.Models.Entities
         public string? Description { get; set; }
         public required string City { get; set; }
         public required string Country { get; set; }
-        public AppUser User { get; set; } = null!;
+       
     }
 }

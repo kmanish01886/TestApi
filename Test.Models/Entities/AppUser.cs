@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +16,8 @@ namespace Test.Models.Entities
         public string? ImageUrl { get; set; }
         public required byte[] PasswordHash { get; set; }
         public required byte[] PasswordSalt { get; set; }
+        public int MemberId { get; set; }
+        [ForeignKey(nameof(MemberId))]
+        public Member Member { get; set; } = null!;
     }
 }

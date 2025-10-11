@@ -6,22 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Test.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMemberandPhotoToDb : Migration
+    public partial class updateMeberstable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ImageUrl",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "Members",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -30,17 +25,11 @@ namespace Test.DataAccess.Migrations
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Members", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Members_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -51,7 +40,7 @@ namespace Test.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    MemberId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,14 +53,37 @@ namespace Test.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Members_UserId",
-                table: "Members",
-                column: "UserId");
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    MemberId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Members_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "Members",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Photos_MemberId",
                 table: "Photos",
+                column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_MemberId",
+                table: "Users",
                 column: "MemberId");
         }
 
@@ -82,11 +94,10 @@ namespace Test.DataAccess.Migrations
                 name: "Photos");
 
             migrationBuilder.DropTable(
-                name: "Members");
+                name: "Users");
 
-            migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "Users");
+            migrationBuilder.DropTable(
+                name: "Members");
         }
     }
 }
